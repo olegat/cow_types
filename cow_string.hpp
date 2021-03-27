@@ -187,15 +187,15 @@ public:
   // Get character of string
   //----------------------------------------------------------------------------
   // TODO(olegat) should return a class that override write-operators.
-        char& operator[] (std::size_t pos);
-  const char& operator[] (std::size_t pos) const;
-        char& at   (std::size_t pos);
-  const char& at   (std::size_t pos) const;
+        charT& operator[] (std::size_t pos);
+  const charT& operator[] (std::size_t pos) const;
+        charT& at (std::size_t pos);
+  const charT& at (std::size_t pos) const;
 #if __cplusplus >= 201103L
-        char& back (std::size_t pos);
-  const char& back (std::size_t pos) const;
-        char& front(std::size_t pos);
-  const char& front(std::size_t pos) const;
+        charT& back ();
+  const charT& back () const;
+        charT& front();
+  const charT& front() const;
 #endif
 
 
@@ -789,11 +789,78 @@ basic_string<charT,traits,Alloc>::~basic_string()
 }
 
 template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator= (
+  const std::basic_string<charT,traits,Alloc>& str)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator= (
+  const cow::basic_string<charT,traits,Alloc>& str)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator= (const char* s)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator= (char c)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator= (std::initializer_list<char> il)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator= (std::basic_string<charT,traits,Alloc>&& str) noexcept
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator= (cow::basic_string<charT,traits,Alloc>&& str) noexcept
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+#endif
+
+template < class charT, class traits, class Alloc >
 std::size_t
 basic_string<charT,traits,Alloc>::length() const
 #if __cplusplus >= 201103L
   noexcept
 #endif
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+charT&
+basic_string<charT,traits,Alloc>::operator[] (std::size_t pos)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+const charT&
+basic_string<charT,traits,Alloc>::operator[] (std::size_t pos) const
 {
   COWSTRING_UNIMPLEMENTED();
 }
@@ -918,13 +985,47 @@ basic_string<charT,traits,Alloc>::rfind(
   COWSTRING_UNIMPLEMENTED();
 }
 
-template < class charT, class t, class A >
-std::ostream& operator<< (
-  std::ostream& os,
-  const cow::basic_string<charT,t,A>& str)
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>
+basic_string<charT,traits,Alloc>::substr(
+  size_type pos,
+  size_type count) const
 {
   COWSTRING_UNIMPLEMENTED();
 }
+
+template < class charT, class traits, class Alloc >
+basic_string<charT,traits,Alloc>::operator
+std::basic_string<charT,traits,Alloc>() const
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+std::ostream& operator<< (
+  std::ostream& os,
+  const cow::basic_string<charT,traits,Alloc>& str)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc> operator+ (
+  const cow::basic_string<charT,traits,Alloc>& lhs,
+  const charT*                                 rhs)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+#if __cplusplus >= 201103L
+template < class charT, class t, class A >
+cow::basic_string<charT,t,A> operator+ (
+        cow::basic_string<charT,t,A>&& lhs,
+  const std::basic_string<charT,t,A>&  rhs)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+#endif
 
 } // namespace cow::
 
