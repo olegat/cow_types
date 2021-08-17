@@ -4,7 +4,9 @@
 
 include(add_functions.cmake)
 
-add_compiler( example_compiler
+add_target( example_compiler
+  TYPE
+    executable
   SOURCES
     example_compiler.cpp
   PROPERTIES
@@ -12,7 +14,22 @@ add_compiler( example_compiler
     CXX_EXTENSIONS OFF
 )
 
-add_cpp_in( basic_string
+add_target( example_runner
+  TYPE
+    executable
+  SOURCES
+    example_runner.cpp
+    utils.cpp
+    utils.hpp
+    process.hpp
+  SOURCES_UNIX
+    process_posix.cpp
+  PROPERTIES
+    CXX_STANDARD   17
+    CXX_EXTENSIONS OFF
+)
+
+add_example( basic_string
   SOURCES
     basic_string.cpp.in
   PROPERTIES
@@ -20,7 +37,9 @@ add_cpp_in( basic_string
     CXX_EXTENSIONS OFF
 )
 
-add_cpp_in( string_find
+add_example( string_find
   SOURCES
     string_find.cpp.in
 )
+
+write_tests_file( tests.tsv )

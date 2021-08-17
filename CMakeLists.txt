@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 3.12)
 project(cow_string)
 
 option(COW_STRING_ENABLE_TESTS "Add CMake subdirectory 'test/'" ON)
-option(COW_STRING_LIB_TYPE "Type of library for cow_string (default: OBJECT)" OBJECT)
 
 add_library(cow_string INTERFACE)
 
