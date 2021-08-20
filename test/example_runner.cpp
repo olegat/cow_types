@@ -17,6 +17,9 @@
 #include "process.hpp"
 #include "utils.hpp"
 #include <iostream>
+#include <sstream>
+
+using sstream = std::stringstream;
 
 #ifdef _WIN32
 #define PROGNAME "example_runner.exe"
@@ -76,9 +79,35 @@ void run_test_file( const string& path)
     int sr = p.start();
     int wr = p.wait(1000);
 
-    std::cout << std::endl;
-    p.printDebugInfo();
-    std::cout << std::endl;
+    string expectedOutput = read_text(line.output_path);
+
+    sstream errMsg;
+    if( p.mExitstatus != 0 ) {
+      errMsg << "Program exited with status " << p.mExitstatus;
+    } else if ( p.mStdout != expectedOutput ) {
+      errMsg << "Program output is incorrect";
+    }
+
+    string msg = errMsg.str();
+    string hr (50, '-');
+    std::cout << hr << std::endl;
+    if( ! msg.empty() ) {
+      std::cout << "Test " << p.mArgv[0] << " FAILED!" << std::endl;
+      std::cout << "Reason: " << msg << std::endl;
+
+      struct{ const char* name; const string& content; } iostreams[] {
+        { "Expected Output:", expectedOutput },
+        { "stdout:", p.mStdout},
+        { "stderr:", p.mStderr},
+        { "stdin:" , p.mStdin },
+      };
+      for( auto io : iostreams ) {
+        std::cout << std::endl << io.name << std::endl
+          << io.content << "(EOF)" << std::endl;
+      }
+    } else {
+      std::cout << "Test " << p.mArgv[0] << " PASSED!" << std::endl;
+    }
   }
 }
 

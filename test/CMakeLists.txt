@@ -35,6 +35,8 @@ add_example( basic_string
   PROPERTIES
     CXX_STANDARD   14
     CXX_EXTENSIONS OFF
+  DEFINES
+    -DCOWSTRING_IMPLICIT_STDSTRING_OPERATOR=1
 )
 
 add_example( string_find

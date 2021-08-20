@@ -7,6 +7,7 @@
 
 #include <string>
 #include <memory>
+#include <ostream> //TODO testing: remove this
 
 namespace cow {
 
@@ -37,7 +38,7 @@ public:
   // copy (2)
   basic_string (const cow::basic_string<charT,traits,Alloc>& str);
   // copy (2.1)
-#ifndef COWSTRING_NO_EXPLICIT_STDSTRING
+#ifndef COWSTRING_IMPLICIT_STDSTRING_CTORS
   explicit
 #endif
   basic_string (const std::basic_string<charT,traits,Alloc>& str);
@@ -57,12 +58,12 @@ public:
   // initializer list (8)
   basic_string (std::initializer_list<char> il);
   // move (9)
-  basic_string (const cow::basic_string<charT,traits,Alloc>&& str);
+  basic_string (cow::basic_string<charT,traits,Alloc>&& str);
   // move (9.1)
-# ifndef COWSTRING_NO_EXPLICIT_STDSTRING
+# ifndef COWSTRING_IMPLICIT_STDSTRING_CTORS
   explicit
 # endif
-  basic_string (const std::basic_string<charT,traits,Alloc>&& str);
+  basic_string (std::basic_string<charT,traits,Alloc>&& str);
 #endif
 
 
@@ -544,20 +545,43 @@ public:
   // (necessary to add fake overloads for std::basic_string)
   // Example: std::string s = cow::string("Hello world")
   //----------------------------------------------------------------------------
-#ifndef COWSTRING_NO_EXPLICIT_STDSTRING
+#ifndef COWSTRING_IMPLICIT_STDSTRING_OPERATOR
   explicit
 #endif
   operator std::basic_string<charT,traits,Alloc>()  const;
 
 private:
+  std::basic_string<charT,traits,Alloc>& _get_writeable() {
+    if( m_ro_string.get() != nullptr ) { // is this read-only?
+      // Copy-On-Write:
+      m_rw_string.reset(new std::basic_string<charT,traits,Alloc>(*m_ro_string.get()));
+      m_ro_string.reset();
+    }
+    return *m_rw_string.get();
+  }
+
+  std::basic_string<charT,traits,Alloc>* _get_string_ptr() const {
+    // Either 'ro' or 'rw' should be NULL if the class specification is respected.
+    // Adding them together gives you the non-NULL variable.
+    std::basic_string<charT,traits,Alloc> *ro = m_ro_string.get();
+    std::basic_string<charT,traits,Alloc> *rw = m_rw_string.get();
+    uintptr_t addr = uintptr_t(ro) + uintptr_t(rw);
+    return reinterpret_cast<std::basic_string<charT,traits,Alloc>*> (addr);
+  }
+
+  std::basic_string<charT,traits,Alloc>& _get_string_ref() {
+    return *_get_string_ptr();
+  }
+
+  const std::basic_string<charT,traits,Alloc>& _get_string_ref() const {
+    return *_get_string_ptr();
+  }
+
   /* Read-only string, copied-on-write to m_rw_string */
   std::shared_ptr< std::basic_string<charT,traits,Alloc> > m_ro_string;
 
   /* Read-write string, moved to m_ro_string when this is copied */
   std::unique_ptr< std::basic_string<charT,traits,Alloc> > m_rw_string;
-
-  /* Is this cow_string mutable (RW)? */
-  int m_type;
 };
 
 
@@ -705,6 +729,8 @@ basic_string<charT,traits,Alloc>::basic_string(
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   const std::basic_string<charT,traits,Alloc>& str)
+: m_ro_string(NULL)
+, m_rw_string(new std::basic_string<charT,traits,Alloc>(str))
 {
   COWSTRING_UNIMPLEMENTED();
 }
@@ -730,24 +756,27 @@ basic_string<charT,traits,Alloc>::basic_string(
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   const char* nul_terminated_c_str)
+: m_ro_string(NULL)
+, m_rw_string(new std::basic_string<charT,traits,Alloc>(nul_terminated_c_str))
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   const char* s,
   std::size_t n)
+: m_ro_string(NULL)
+, m_rw_string(new std::basic_string<charT,traits,Alloc>(s, n))
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   std::size_t n,
   char c)
+: m_ro_string(nullptr)
+, m_rw_string(new std::basic_string<charT,traits,Alloc>(n, c))
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
@@ -769,23 +798,24 @@ basic_string<charT,traits,Alloc>::basic_string(
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
-  const cow::basic_string<charT,traits,Alloc>&& str)
+  cow::basic_string<charT,traits,Alloc>&& str)
+: m_ro_string(std::move(str.m_ro_string))
+, m_rw_string(str.m_rw_string.release())
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
-  const std::basic_string<charT,traits,Alloc>&& str)
+  std::basic_string<charT,traits,Alloc>&& str)
+: m_ro_string(nullptr)
+, m_rw_string(new std::basic_string<charT,traits,Alloc>(str))
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 #endif
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::~basic_string()
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
@@ -837,9 +867,22 @@ template < class charT, class traits, class Alloc >
 cow::basic_string<charT,traits,Alloc>&
 basic_string<charT,traits,Alloc>::operator= (cow::basic_string<charT,traits,Alloc>&& str) noexcept
 {
-  COWSTRING_UNIMPLEMENTED();
+  m_ro_string = str.m_ro_string;
+  m_rw_string.reset( str.m_rw_string.release() );
+  str.clear();
+  return *this;
 }
 #endif
+
+template < class charT, class traits, class Alloc >
+std::size_t
+basic_string<charT,traits,Alloc>::size() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_string_ref().size();
+}
 
 template < class charT, class traits, class Alloc >
 std::size_t
@@ -852,17 +895,28 @@ basic_string<charT,traits,Alloc>::length() const
 }
 
 template < class charT, class traits, class Alloc >
+void
+basic_string<charT,traits,Alloc>::clear()
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  m_ro_string = nullptr;
+  m_rw_string.reset(new std::basic_string<charT,traits,Alloc>());
+}
+
+template < class charT, class traits, class Alloc >
 charT&
 basic_string<charT,traits,Alloc>::operator[] (std::size_t pos)
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_writeable()[pos];
 }
 
 template < class charT, class traits, class Alloc >
 const charT&
 basic_string<charT,traits,Alloc>::operator[] (std::size_t pos) const
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref()[pos];
 }
 
 template < class charT, class traits, class Alloc >
@@ -905,7 +959,7 @@ basic_string<charT,traits,Alloc>::find(
   const charT* s,
   std::size_t pos) const
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().find(s, pos);
 }
 
 template < class charT, class traits, class Alloc >
@@ -991,14 +1045,19 @@ basic_string<charT,traits,Alloc>::substr(
   size_type pos,
   size_type count) const
 {
-  COWSTRING_UNIMPLEMENTED();
+  std::basic_string<charT,traits,Alloc> string_ref = _get_string_ref();
+  if(count == std::basic_string<charT,traits,Alloc>::npos) {
+    count = string_ref.size() - pos;
+  }
+  cow::basic_string<charT,traits,Alloc> result( &string_ref[pos], count );
+  return result;
 }
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::operator
 std::basic_string<charT,traits,Alloc>() const
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref();
 }
 
 template < class charT, class traits, class Alloc >
@@ -1006,7 +1065,8 @@ std::ostream& operator<< (
   std::ostream& os,
   const cow::basic_string<charT,traits,Alloc>& str)
 {
-  COWSTRING_UNIMPLEMENTED();
+  os.write( &str[0], str.size() );
+  return os;
 }
 
 template < class charT, class traits, class Alloc >
@@ -1014,16 +1074,28 @@ cow::basic_string<charT,traits,Alloc> operator+ (
   const cow::basic_string<charT,traits,Alloc>& lhs,
   const charT*                                 rhs)
 {
-  COWSTRING_UNIMPLEMENTED();
+  const std::size_t lhsize = lhs.size();
+  const std::size_t rhsize = std::char_traits<charT>::length(rhs);
+
+  cow::basic_string<charT,traits,Alloc> result( lhsize + rhsize, '\0' );
+  std::memcpy( &result[0],      &lhs[0], lhsize );
+  std::memcpy( &result[lhsize], rhs,     rhsize );
+  return result;
 }
 
 #if __cplusplus >= 201103L
-template < class charT, class t, class A >
-cow::basic_string<charT,t,A> operator+ (
-        cow::basic_string<charT,t,A>&& lhs,
-  const std::basic_string<charT,t,A>&  rhs)
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc> operator+ (
+        cow::basic_string<charT,traits,Alloc>&& lhs,
+  const std::basic_string<charT,traits,Alloc>&  rhs)
 {
-  COWSTRING_UNIMPLEMENTED();
+  const std::size_t lhsize = lhs.size();
+  const std::size_t rhsize = rhs.size();
+
+  cow::basic_string<charT,traits,Alloc> result( lhsize + rhsize, '\0' );
+  std::memcpy( &result[0],      &lhs[0], lhsize );
+  std::memcpy( &result[lhsize], &rhs[0], rhsize );
+  return result;
 }
 #endif
 

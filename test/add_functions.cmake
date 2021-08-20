@@ -45,13 +45,16 @@ function(add_target tgt)
 endfunction()
 
 function(add_example tgt)
-  cmake_parse_arguments(args "" "" "SOURCES;PROPERTIES" ${ARGN} )
+  cmake_parse_arguments(args "" "" "SOURCES;PROPERTIES;DEFINES" ${ARGN} )
   # Add & config target:
   set(EXAMPLE_TARGETS ${EXAMPLE_TARGETS} ${tgt} PARENT_SCOPE)
   add_executable( ${tgt} )
   target_link_libraries( ${tgt} PRIVATE cow_string )
   if(DEFINED args_PROPERTIES)
     set_target_properties(${tgt} PROPERTIES ${args_PROPERTIES})
+  endif()
+  if(DEFINED args_DEFINES)
+    target_compile_definitions(${tgt} PRIVATE ${args_DEFINES})
   endif()
   # Add custom commands for "*.cpp.in" files:
   set(have_cpp_in FALSE)

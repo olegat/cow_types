@@ -165,7 +165,6 @@ static void do_file(stringref inpath)
   const string patched_source =
     "// Generated from input file : " + inpath + string("\n") +
     "// This example comes from   : " + sect.url + string("\n") +
-    "#define COWSTRING_NO_EXPLICIT_STDSTRING 1\n" +
     "#include <cow_string.hpp>\n" +
     replace_all( sect.source, "std::string", "cow::string" );
 

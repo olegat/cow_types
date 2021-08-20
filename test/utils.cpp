@@ -29,6 +29,9 @@ vector<string> split_string( const string& str, const string& delim )
     result.push_back( str.substr (start, end - start) );
     start = end + delim.length();
   }
+  if( start != str.length() - 1) {
+    result.push_back( str.substr (start) );
+  }
   return result;
 }
 
@@ -39,7 +42,7 @@ string read_text( const string& filepath )
   sstream ss;
   size_t n;
 
-  FILE* file = fopen("tests.tsv", "rb");
+  FILE* file = fopen(filepath.c_str(), "rb");
   if( file != NULL ) {
     do {
       n = fread( buffer, 1, bufferSize, file );
@@ -59,6 +62,9 @@ tsv read_tsv( const string& filepath )
 
   tsv result;
   for( string line : lines ) {
+    if( line.empty() ) {
+      continue;
+    }
     vector<string> columns = split_string( line, "\t" );
     tsv_line row;
     if( columns.size() >= 1 ) {
