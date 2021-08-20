@@ -891,7 +891,7 @@ basic_string<charT,traits,Alloc>::length() const
   noexcept
 #endif
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().length();
 }
 
 template < class charT, class traits, class Alloc >
@@ -926,7 +926,8 @@ basic_string<charT,traits,Alloc>::replace(
   std::size_t len,
   const charT* s)
 {
-  COWSTRING_UNIMPLEMENTED();
+  _get_writeable().replace( pos, len, s );
+  return *this;
 }
 
 template < class charT, class traits, class Alloc >
@@ -950,7 +951,7 @@ basic_string<charT,traits,Alloc>::find(
   noexcept
 #endif
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().find( str._get_string_ref(), pos );
 }
 
 template < class charT, class traits, class Alloc >
@@ -959,7 +960,7 @@ basic_string<charT,traits,Alloc>::find(
   const charT* s,
   std::size_t pos) const
 {
-  return _get_string_ref().find(s, pos);
+  return _get_string_ref().find( s, pos );
 }
 
 template < class charT, class traits, class Alloc >
@@ -969,7 +970,7 @@ basic_string<charT,traits,Alloc>::find(
   std::size_t pos,
   size_type n) const
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().find( s, pos, n );
 }
 
 template < class charT, class traits, class Alloc >
@@ -981,7 +982,7 @@ basic_string<charT,traits,Alloc>::find(
   noexcept
 #endif
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().find( c, pos );
 }
 
 template < class charT, class traits, class Alloc >
