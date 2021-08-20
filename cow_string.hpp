@@ -906,6 +906,29 @@ basic_string<charT,traits,Alloc>::clear()
 }
 
 template < class charT, class traits, class Alloc >
+void
+basic_string<charT,traits,Alloc>::swap(
+  cow::basic_string<charT,traits,Alloc>& str)
+{
+  std::shared_ptr< std::basic_string<charT,traits,Alloc> >
+    tmp_ro = str.m_ro_string;
+  std::basic_string<charT,traits,Alloc>*
+    tmp_rw = str.m_rw_string.release();
+  str.m_ro_string = this->m_ro_string;
+  str.m_rw_string.reset( this->m_rw_string.release() );
+  this->m_ro_string = tmp_ro;
+  this->m_rw_string.reset( tmp_rw );
+}
+
+template < class charT, class traits, class Alloc >
+void
+basic_string<charT,traits,Alloc>::swap(
+  std::basic_string<charT,traits,Alloc>& str)
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
 charT&
 basic_string<charT,traits,Alloc>::operator[] (std::size_t pos)
 {

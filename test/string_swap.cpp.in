@@ -1,0 +1,27 @@
+[URL]
+https://www.cplusplus.com/reference/string/string/swap/
+
+[Source]
+// swap strings
+#include <iostream>
+#include <string>
+
+int main ()
+{
+  std::string buyer ("money");
+  std::string seller ("goods");
+
+  std::cout << "Before the swap, buyer has " << buyer;
+  std::cout << " and seller has " << seller << '\n';
+
+  seller.swap (buyer);
+
+  std::cout << " After the swap, buyer has " << buyer;
+  std::cout << " and seller has " << seller << '\n';
+
+  return 0;
+}
+
+[Output]
+Before the swap, buyer has money and seller has goods
+ After the swap, buyer has goods and seller has money
