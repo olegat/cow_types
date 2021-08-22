@@ -54,4 +54,9 @@ add_example( string_find
     string_find.cpp.in
 )
 
+add_example( string_operator_plusequal
+  SOURCES
+    string_operator_plusequal.cpp.in
+)
+
 write_tests_file( tests.tsv )

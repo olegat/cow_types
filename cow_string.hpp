@@ -948,6 +948,48 @@ basic_string<charT,traits,Alloc>::clear()
 
 template < class charT, class traits, class Alloc >
 cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator+= (
+  const cow::basic_string<charT,traits,Alloc>& str)
+{
+  return append( str );
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator+= (
+  const std::basic_string<charT,traits,Alloc>& str)
+{
+  return append( str );
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator+= (
+  const charT* s)
+{
+  return append( s );
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator+= (
+  charT c)
+{
+  return append( 1, c );
+}
+
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::operator+= (
+  std::initializer_list<charT> il)
+{
+  return append( il );
+}
+#endif
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
 basic_string<charT,traits,Alloc>::append(
   const cow::basic_string<charT,traits,Alloc>& str)
 {
