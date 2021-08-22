@@ -39,6 +39,11 @@ add_example( basic_string
     -DCOWSTRING_IMPLICIT_STDSTRING_OPERATOR=1
 )
 
+add_example( string_append
+  SOURCES
+    string_append.cpp.in
+)
+
 add_example( string_swap
   SOURCES
     string_swap.cpp.in

@@ -23,11 +23,11 @@ class basic_string
 public:
   static const std::size_t npos = std::basic_string<charT,traits,Alloc>::npos;
 
-  typedef std::string::size_type size_type;
-  typedef void* iterator;               // stub;
-  typedef void* const_iterator;         // stub;
-  typedef void* reverse_iterator;       // stub;
-  typedef void* const_reverse_iterator; // stub;
+  typedef std::string::size_type                size_type;
+  typedef std::string::iterator                 iterator;
+  typedef std::string::iterator                 const_iterator;
+  typedef std::string::reverse_iterator         reverse_iterator;
+  typedef std::string::const_reverse_iterator   const_reverse_iterator;
 
 
   //----------------------------------------------------------------------------
@@ -225,10 +225,10 @@ public:
   cow::basic_string<charT,traits,Alloc>& append (const charT* s, std::size_t n);
   // fill (5)
   cow::basic_string<charT,traits,Alloc>& append (std::size_t n, charT c);
-#if __cplusplus >= 201103L
   // range (6)
   template <class InputIterator>
   cow::basic_string<charT,traits,Alloc>& append (InputIterator first, InputIterator last);
+#if __cplusplus >= 201103L
   // initializer list(7)
   cow::basic_string<charT,traits,Alloc>& append (std::initializer_list<charT> il);
 #endif
@@ -715,8 +715,9 @@ typedef basic_string<wchar_t>        wstring;
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string()
+: m_ro_string(NULL)
+, m_rw_string(new std::basic_string<charT,traits,Alloc>())
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
@@ -875,6 +876,46 @@ basic_string<charT,traits,Alloc>::operator= (cow::basic_string<charT,traits,Allo
 #endif
 
 template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::iterator
+basic_string<charT,traits,Alloc>::begin()
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_writeable().begin();
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::const_iterator
+basic_string<charT,traits,Alloc>::begin() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_string_ref().begin();
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::iterator
+basic_string<charT,traits,Alloc>::end()
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_writeable().end();
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::const_iterator
+basic_string<charT,traits,Alloc>::end() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_string_ref().end();
+}
+
+template < class charT, class traits, class Alloc >
 std::size_t
 basic_string<charT,traits,Alloc>::size() const
 #if __cplusplus >= 201103L
@@ -904,6 +945,77 @@ basic_string<charT,traits,Alloc>::clear()
   m_ro_string = nullptr;
   m_rw_string.reset(new std::basic_string<charT,traits,Alloc>());
 }
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::append(
+  const cow::basic_string<charT,traits,Alloc>& str)
+{
+  _get_writeable().append( str._get_string_ref() );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::append(
+  const cow::basic_string<charT,traits,Alloc>& str,
+  std::size_t subpos,
+  std::size_t sublen)
+{
+  _get_writeable().append( str._get_string_ref(), subpos, sublen );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::append(
+  const charT* s)
+{
+  _get_writeable().append( s );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::append(
+  const charT* s,
+  std::size_t n)
+{
+  _get_writeable().append( s, n );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::append(
+  std::size_t n,
+  charT c)
+{
+  _get_writeable().append( n, c );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+template <class InputIterator>
+  cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::append(
+  InputIterator first,
+  InputIterator last)
+{
+  _get_writeable().append( first, last );
+  return *this;
+}
+
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+basic_string<charT,traits,Alloc>::append(
+  std::initializer_list<charT> il)
+{
+  _get_writeable().append( il );
+  return *this;
+}
+#endif
 
 template < class charT, class traits, class Alloc >
 void
