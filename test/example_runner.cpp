@@ -82,7 +82,9 @@ void run_test_file( const string& path)
     string expectedOutput = read_text(line.output_path);
 
     sstream errMsg;
-    if( p.mExitstatus != 0 ) {
+    if( p.mTimedOut != 0 ) {
+      errMsg << "Program timed-out (" << wr << "ms)";
+    } else if( p.mExitstatus != 0 ) {
       errMsg << "Program exited with status " << p.mExitstatus;
     } else if ( p.mStdout != expectedOutput ) {
       errMsg << "Program output is incorrect";
