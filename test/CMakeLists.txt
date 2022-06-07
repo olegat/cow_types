@@ -12,6 +12,7 @@ add_target( example_compiler
   PROPERTIES
     CXX_STANDARD   17
     CXX_EXTENSIONS OFF
+    VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:example_compiler>
 )
 
 add_target( example_runner
@@ -24,9 +25,12 @@ add_target( example_runner
     process.hpp
   SOURCES_UNIX
     process_posix.cpp
+  SOURCES_WIN32
+    process_win32.cpp
   PROPERTIES
     CXX_STANDARD   17
     CXX_EXTENSIONS OFF
+    VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:example_runner>
 )
 
 add_example( basic_string

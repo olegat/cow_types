@@ -35,6 +35,16 @@ vector<string> split_string( const string& str, const string& delim )
   return result;
 }
 
+vector<string> split_lines(const string& str)
+{
+  // Guess EOL mode (CRLF Windows/DOS, LF macOS/Unix)
+  string delim = "\n";
+  if (str.find("\r\n") != string::npos) {
+    delim = "\r\n";
+  }
+  return split_string(str, delim);
+}
+
 string read_text( const string& filepath )
 {
   const size_t bufferSize = 1024;
@@ -58,7 +68,7 @@ tsv read_tsv( const string& filepath )
 {
   string text = read_text( filepath );
 
-  vector<string> lines = split_string( text, "\n" );
+  vector<string> lines = split_lines( text );
 
   tsv result;
   for( string line : lines ) {

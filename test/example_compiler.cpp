@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+#include <cassert>
 
 using ifstream  = std::ifstream;
 using ofstream  = std::ofstream;
