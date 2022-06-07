@@ -71,13 +71,18 @@ static void parse_args( int* argc, const char*** argv )
 
 void run_test_file( const string& path)
 {
+#if _DEBUG
+  const uint64 kTimeoutMS = 0; // no-timeout
+#else
+  const uint64 kTimeoutMS = 1000;
+#endif
   const tsv table = read_tsv( path );
 
   for( const tsv_line& line : table.lines ) {
     process p;
     p.mArgv = { line.binary_path };
     int sr = p.start();
-    int wr = p.wait(1000);
+    int wr = p.wait(kTimeoutMS);
 
     string expectedOutput = read_text(line.output_path);
 

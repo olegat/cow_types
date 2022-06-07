@@ -183,7 +183,8 @@ int process::wait( uint64 timeoutMS )
 {
   // Wait for process to finish (or timeout & terminate)
   HANDLE hproc = _internal->procinfo.hProcess;
-  DWORD status = WaitForSingleObject(hproc, static_cast<DWORD>(timeoutMS));
+  DWORD dwTimeout = timeoutMS == 0 ? INFINITE : static_cast<DWORD>(timeoutMS);
+  DWORD status = WaitForSingleObject(hproc, dwTimeout);
   if (status == WAIT_TIMEOUT) {
     this->mTimedOut = true;
   }
