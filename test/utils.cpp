@@ -58,8 +58,8 @@ string read_text( const string& filepath )
       n = fread( buffer, 1, bufferSize, file );
       ss.write( buffer, n );
     } while( n == bufferSize );
+    fclose( file );
   }
-  fclose( file );
 
   return ss.str();
 }
