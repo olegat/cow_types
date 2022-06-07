@@ -551,8 +551,12 @@ public:
   operator std::basic_string<charT,traits,Alloc>()  const;
 
 private:
+  bool _is_readonly() const {
+    return m_ro_string.get() != nullptr;
+  }
+
   std::basic_string<charT,traits,Alloc>& _get_writeable() {
-    if( m_ro_string.get() != nullptr ) { // is this read-only?
+    if( _is_readonly() ) {
       // Copy-On-Write:
       m_rw_string.reset(new std::basic_string<charT,traits,Alloc>(*m_ro_string.get()));
       m_ro_string.reset();
@@ -575,6 +579,16 @@ private:
 
   const std::basic_string<charT,traits,Alloc>& _get_string_ref() const {
     return *_get_string_ptr();
+  }
+
+  cow::basic_string<charT,traits,Alloc>& _copy(const cow::basic_string<charT,traits,Alloc>& lhs) {
+    m_rw_string.reset();
+    if( lhs._is_readonly() ) {
+      m_ro_string = lhs.m_ro_string;
+    } else {
+      m_ro_string.reset(new std::basic_string<charT,traits,Alloc>(*lhs.m_rw_string.get()));
+    }
+    return *this;
   }
 
   /* Read-only string, copied-on-write to m_rw_string */
@@ -715,25 +729,26 @@ typedef basic_string<wchar_t>        wstring;
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string()
-: m_ro_string(NULL)
-, m_rw_string(new std::basic_string<charT,traits,Alloc>())
+: m_ro_string(new std::basic_string<charT,traits,Alloc>())
+, m_rw_string()
 {
 }
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   const cow::basic_string<charT,traits,Alloc>& str)
+: m_ro_string()
+, m_rw_string()
 {
-  COWSTRING_UNIMPLEMENTED();
+  _copy(str);
 }
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   const std::basic_string<charT,traits,Alloc>& str)
-: m_ro_string(NULL)
-, m_rw_string(new std::basic_string<charT,traits,Alloc>(str))
+: m_ro_string(new std::basic_string<charT,traits,Alloc>(str))
+, m_rw_string()
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
@@ -757,8 +772,8 @@ basic_string<charT,traits,Alloc>::basic_string(
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   const char* nul_terminated_c_str)
-: m_ro_string(NULL)
-, m_rw_string(new std::basic_string<charT,traits,Alloc>(nul_terminated_c_str))
+: m_ro_string(new std::basic_string<charT,traits,Alloc>(nul_terminated_c_str))
+, m_rw_string()
 {
 }
 
@@ -766,8 +781,8 @@ template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   const char* s,
   std::size_t n)
-: m_ro_string(NULL)
-, m_rw_string(new std::basic_string<charT,traits,Alloc>(s, n))
+: m_ro_string(new std::basic_string<charT,traits,Alloc>(s, n))
+, m_rw_string()
 {
 }
 
@@ -775,8 +790,8 @@ template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   std::size_t n,
   char c)
-: m_ro_string(nullptr)
-, m_rw_string(new std::basic_string<charT,traits,Alloc>(n, c))
+: m_ro_string(new std::basic_string<charT,traits,Alloc>(n, c))
+, m_rw_string()
 {
 }
 
@@ -832,7 +847,7 @@ cow::basic_string<charT,traits,Alloc>&
 basic_string<charT,traits,Alloc>::operator= (
   const cow::basic_string<charT,traits,Alloc>& str)
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _copy(str);
 }
 
 template < class charT, class traits, class Alloc >
@@ -1247,6 +1262,22 @@ std::ostream& operator<< (
   return os;
 }
 
+// string (1.3)
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc> operator+ (
+  const cow::basic_string<charT,traits,Alloc>& lhs,
+  const std::basic_string<charT,traits,Alloc>& rhs)
+{
+  const std::size_t lhsize = lhs.size();
+  const std::size_t rhsize = rhs.size();
+
+  cow::basic_string<charT,traits,Alloc> result( lhsize + rhsize, '\0' );
+  std::memcpy( &result[0],      &lhs[0], lhsize );
+  std::memcpy( &result[lhsize], &rhs[0], rhsize );
+  return result;
+}
+
+// c-string (2)
 template < class charT, class traits, class Alloc >
 cow::basic_string<charT,traits,Alloc> operator+ (
   const cow::basic_string<charT,traits,Alloc>& lhs,
