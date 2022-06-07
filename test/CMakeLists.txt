@@ -4,6 +4,8 @@
 
 include(add_functions.cmake)
 
+set_property( GLOBAL PROPERTY USE_FOLDERS ON)
+
 add_target( example_compiler
   TYPE
     executable
@@ -12,6 +14,7 @@ add_target( example_compiler
   PROPERTIES
     CXX_STANDARD   17
     CXX_EXTENSIONS OFF
+    FOLDER         "test"
     VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:example_compiler>
 )
 
@@ -30,6 +33,7 @@ add_target( example_runner
   PROPERTIES
     CXX_STANDARD   17
     CXX_EXTENSIONS OFF
+    FOLDER         "test"
     VS_DEBUGGER_WORKING_DIRECTORY $<TARGET_FILE_DIR:example_runner>
 )
 
@@ -39,6 +43,7 @@ add_example( basic_string
   PROPERTIES
     CXX_STANDARD   14
     CXX_EXTENSIONS OFF
+    FOLDER         "test/string"
   DEFINES
     -DCOWSTRING_IMPLICIT_STDSTRING_OPERATOR=1
 )
@@ -46,21 +51,33 @@ add_example( basic_string
 add_example( string_append
   SOURCES
     string_append.cpp.in
+  PROPERTIES
+    CXX_STANDARD   14
+    CXX_EXTENSIONS OFF
+    FOLDER         "test/string"
 )
 
 add_example( string_swap
   SOURCES
     string_swap.cpp.in
+  PROPERTIES
+    CXX_STANDARD   14
+    CXX_EXTENSIONS OFF
+    FOLDER         "test/string"
 )
 
 add_example( string_find
   SOURCES
     string_find.cpp.in
+  PROPERTIES
+    FOLDER         "test/string"
 )
 
 add_example( string_operator_plusequal
   SOURCES
     string_operator_plusequal.cpp.in
+  PROPERTIES
+    FOLDER         "test/string"
 )
 
 write_tests_file( tests.tsv )
