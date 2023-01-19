@@ -38,7 +38,7 @@ public:
   // copy (2)
   basic_string (const cow::basic_string<charT,traits,Alloc>& str);
   // copy (2.1)
-#ifndef COWSTRING_IMPLICIT_STDSTRING_CTORS
+#if !defined(COWSTRING_IMPLICIT_STDSTRING_CTORS) && __cplusplus >= 201103L
   explicit
 #endif
   basic_string (const std::basic_string<charT,traits,Alloc>& str);
@@ -60,7 +60,7 @@ public:
   // move (9)
   basic_string (cow::basic_string<charT,traits,Alloc>&& str);
   // move (9.1)
-# ifndef COWSTRING_IMPLICIT_STDSTRING_CTORS
+# if !defined(COWSTRING_IMPLICIT_STDSTRING_CTORS) && __cplusplus >= 201103L
   explicit
 # endif
   basic_string (std::basic_string<charT,traits,Alloc>&& str);
@@ -545,7 +545,7 @@ public:
   // (necessary to add fake overloads for std::basic_string)
   // Example: std::string s = cow::string("Hello world")
   //----------------------------------------------------------------------------
-#ifndef COWSTRING_IMPLICIT_STDSTRING_OPERATOR
+#if ! defined(COWSTRING_IMPLICIT_STDSTRING_OPERATOR) && __cplusplus >= 201103L
   explicit
 #endif
   operator std::basic_string<charT,traits,Alloc>()  const;
