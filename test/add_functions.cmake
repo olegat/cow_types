@@ -117,7 +117,7 @@ function(write_tests_file filename)
       "${content}$<TARGET_FILE:${tgt}>\t${src}\t${out}\n")
   endforeach()
   file(GENERATE
-    OUTPUT  $<CONFIG>/${filename}
+    OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/${filename}
     CONTENT ${content}
   )
 endfunction()
