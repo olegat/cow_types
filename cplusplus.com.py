@@ -150,6 +150,7 @@ class CrawlPath:
       self._currentlevel = self._nextlevel
       self._nextlevel = []
       self._currentdepth += 1
+      logging.debug(f'crawl: Iterating to level (depth = {self._currentdepth})')
 
     if self._currentdepth > self._maxdepth:
       logging.debug(f'crawl: Stopped. Reached maxdepth={self._maxdepth}')
@@ -158,6 +159,7 @@ class CrawlPath:
     if self._currentlevel:
       return self._currentlevel.pop(0)
 
+    logging.debug(f'crawl: No more unseen URLs (stopped at depth = {self._currentdepth})')
     return None
 
   def __iter__(self):
@@ -177,24 +179,35 @@ class CrawlPath:
     raise StopIteration
 
 
-# TESTING (3)
-cache = Cache('cache')
-spider = Spider(
-  starturl = 'http://cplusplus.com/reference/string/string',
-  depth = 2,
-  cache = cache)
-for page in spider.crawl():
-  print(f'visited {page.url}')
+class CplusplusDotComStringSpider(Spider):
 
-# TESTING (2)
-# url = 'http://cplusplus.com/reference/string/string'
-# cache = Cache('cache')
-# with Page(url, cache=cache.get_entry(url)) as page:
-#   for a in page.xpath('//a'):
-#     print(f'{a.attrib["href"]}')
+  def child_urls(self, page:Page):
+    return list(filter(
+      lambda x: x.startswith ('/reference/string/string'),
+      (a.attrib['href'] for a in page.xpath('//a'))
+    ))
 
-# TESTING (1)
-# with urllib.request.urlopen("http://cplusplus.com/reference/string/string") as f:
-#   r = f.read()
-#   print(f'{f=}')
-#   print(f'{r=}')
+def main():
+  spider = CplusplusDotComStringSpider(
+    starturl = 'http://cplusplus.com/reference/string/string',
+    depth = 5,
+    cache = Cache('out/cache')
+  )
+  for page in spider.crawl():
+    source = page.xpath("//td[@class='source']")
+    output = page.xpath("//td[@class='output']")
+    assert len(source) in [0,1]
+    assert len(output) in [0,1]
+    if len(source) == 1 and len(output) == 1:
+      # Get the URL base name ignoring any trailing slashes
+      basename = 'string_' + os.path.basename(os.path.dirname(page.url+'/'))
+      lines = [ '[URL]', page.url, '',
+                '[Source]', source[0].text_content(), '',
+                '[Output]', output[0].text_content()]
+      path = os.path.join('out', basename + '.cpp.in')
+      with open(path, 'w') as f:
+        logging.info(f'writing file: {path}')
+        f.write('\n'.join(lines))
+
+if __name__ == '__main__':
+  main()
