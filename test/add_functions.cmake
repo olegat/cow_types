@@ -100,6 +100,22 @@ function(add_example tgt)
   endforeach()
 endfunction()
 
+function(add_several_examples)
+  cmake_parse_arguments(args "" "" "SOURCES;PROPERTIES;DEFINES" ${ARGN} )
+  foreach(source ${args_SOURCES})
+    get_filename_component( tgt ${source} NAME_WE )
+    add_example( ${tgt}
+      SOURCES
+        ${source}
+      PROPERTIES
+        ${args_PROPERTIES}
+      DEFINES
+        ${args_DEFINES}
+    )
+    set(EXAMPLE_TARGETS ${EXAMPLE_TARGETS} PARENT_SCOPE)
+  endforeach()
+endfunction()
+
 function(write_tests_file filename)
   set(content)
   foreach(tgt ${EXAMPLE_TARGETS})
