@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021 Oli Legat
+ * Copyright (c) 2023 Oli Legat <http://github.com/olegat>.
  * Licensed under the BSD 3-Clause License.
  */
 
