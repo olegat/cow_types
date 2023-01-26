@@ -68,6 +68,8 @@ void run_test_file( const string& path)
 #endif
   const tsv table = read_tsv( path );
 
+  const string hr (50, '-');
+  string hr0;
   for( const tsv_line& line : table.lines ) {
     process p;
     p.mArgv = { line.binary_path };
@@ -86,11 +88,15 @@ void run_test_file( const string& path)
     }
 
     string msg = errMsg.str();
-    string hr (50, '-');
-    std::cout << hr << std::endl;
     if( ! msg.empty() ) {
-      std::cout << "Test " << p.mArgv[0] << " FAILED!" << std::endl;
-      std::cout << "Reason: " << msg << std::endl;
+      if ( hr0.empty() ) {
+        term::out << hr << term::endl;
+        hr0 = hr;
+      }
+      term::out
+        << term::redfg
+        << "Failed: " << p.mArgv[0] << term::reset << term::endl
+        << "Reason: " << msg << term::endl;
 
       struct{ const char* name; const string& content; } iostreams[] {
         { "Expected Output:", expectedOutput },
@@ -99,11 +105,16 @@ void run_test_file( const string& path)
         { "stdin:" , p.mStdin },
       };
       for( auto io : iostreams ) {
-        std::cout << std::endl << io.name << std::endl
-          << io.content << "(EOF)" << std::endl;
+        term::out
+          << term::endl << io.name << term::endl
+          << io.content << term::grayfg << "(EOF)" << term::reset << term::endl;
       }
+      term::out << hr << term::endl;
     } else {
-      std::cout << "Test " << p.mArgv[0] << " PASSED!" << std::endl;
+      term::out
+        << term::greenfg << "Passed: " << p.mArgv[0]
+        << term::reset << term::endl;
+      hr0.clear();
     }
   }
 }

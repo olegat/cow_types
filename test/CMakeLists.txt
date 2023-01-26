@@ -26,10 +26,14 @@ add_target( example_runner
     utils.cpp
     utils.hpp
     process.hpp
+    term.cpp
+    term.hpp
   SOURCES_UNIX
     process_posix.cpp
+    term_posix.cpp
   SOURCES_WIN32
     process_win32.cpp
+    term_win32.cpp
   PROPERTIES
     CXX_STANDARD   17
     CXX_EXTENSIONS OFF
