@@ -14,4 +14,4 @@ int main ()
 }
 
 [Output]
-The size of str is 11 bytes
+The size of str is 11 bytes.
