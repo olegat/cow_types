@@ -1,0 +1,18 @@
+[URL]
+http://cplusplus.com/reference/string/string/pop_back/
+
+[Source]
+// string::pop_back
+#include <iostream>
+#include <string>
+
+int main ()
+{
+  std::string str ("hello world!");
+  str.pop_back();
+  std::cout << str << '\n';
+  return 0;
+}
+
+[Output]
+hello world

@@ -1,5 +1,5 @@
 [URL]
-http://cplusplus.com/reference/string/string/swap/
+http://cplusplus.com/reference/string/string/swap-free/
 
 [Source]
 // swap strings
@@ -14,7 +14,7 @@ int main ()
   std::cout << "Before the swap, buyer has " << buyer;
   std::cout << " and seller has " << seller << '\n';
 
-  seller.swap (buyer);
+  swap (buyer,seller);
 
   std::cout << " After the swap, buyer has " << buyer;
   std::cout << " and seller has " << seller << '\n';

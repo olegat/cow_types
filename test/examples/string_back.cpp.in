@@ -1,0 +1,18 @@
+[URL]
+http://cplusplus.com/reference/string/string/back/
+
+[Source]
+// string::back
+#include <iostream>
+#include <string>
+
+int main ()
+{
+  std::string str ("hello world.");
+  str.back() = '!';
+  std::cout << str << '\n';
+  return 0;
+}
+
+[Output]
+hello world!

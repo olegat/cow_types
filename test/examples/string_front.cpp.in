@@ -1,0 +1,18 @@
+[URL]
+http://cplusplus.com/reference/string/string/front/
+
+[Source]
+// string::front
+#include <iostream>
+#include <string>
+
+int main ()
+{
+  std::string str ("test string");
+  str.front() = 'T';
+  std::cout << str << '\n';
+  return 0;
+}
+
+[Output]
+Test string
