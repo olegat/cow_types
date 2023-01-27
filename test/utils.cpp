@@ -24,6 +24,29 @@ vector<string> split_string( const string& str, const string& delim )
   return result;
 }
 
+vector<string> slice_lines( const string& str )
+{
+  vector<string> result;
+  size_t start = 0;
+  size_t end   = 0;
+  auto add_substr = [&result, &str](size_t start, size_t end) {
+    string s = str.substr(start, end - start);
+    if ( ! s.empty() ) {
+      result.push_back(s);
+    }
+  };
+  while( end < str.size() ) {
+    if (str[end] == '\r' || str[end] == '\n' || str[end] == '\t' || str[end] == '\0') {
+      add_substr(start, end);
+      add_substr(end, end+1);
+      start = end + 1;
+    }
+    end++;
+  }
+  add_substr(start, end);
+  return result;
+}
+
 vector<string> split_lines(const string& str)
 {
   // Guess EOL mode (CRLF Windows/DOS, LF macOS/Unix)

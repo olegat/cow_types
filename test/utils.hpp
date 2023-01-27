@@ -23,6 +23,9 @@ struct tsv {
 // Split a string
 vector<string> split_string( const string& str, const string& delim );
 
+// Seperate out \n \r \t \0 into substrings
+vector<string> slice_lines( const string& str );
+
 // Read a text file.
 string read_text( const string& filepath );
 

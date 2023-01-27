@@ -106,8 +106,24 @@ void run_test_file( const string& path)
       };
       for( auto io : iostreams ) {
         term::out
-          << term::endl << io.name << term::endl
-          << io.content << term::grayfg << "(EOF)" << term::reset << term::endl;
+          << term::endl << io.name << term::endl;
+
+        // Draw common undisplayed characters like \r, \n or \t
+        vector<string> slices = slice_lines(io.content);
+        for (const string& slice : slices) {
+          if (slice == "\t") {
+            term::out << term::grayfg << "\\t" << term::reset;
+          } else if (slice[0] == '\0') {
+            term::out << term::grayfg << "\\0" << term::reset;
+          } else if (slice == "\r") {
+            term::out << term::grayfg << "\\r" << term::reset;
+          } else if (slice == "\n") {
+            term::out << term::grayfg << "\\n" << term::reset << term::endl;
+          } else {
+            term::out << slice;
+          }
+        }
+        term::out << term::grayfg << "(EOF)" << term::reset << term::endl;
       }
       term::out << hr << term::endl;
     } else {
