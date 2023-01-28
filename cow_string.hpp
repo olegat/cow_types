@@ -393,11 +393,11 @@ public:
   //----------------------------------------------------------------------------
   // string (1)
 #if __cplusplus >= 201103L
-  std::size_t rfind (const std::basic_string<charT,traits,Alloc>& str, std::size_t pos = 0) const noexcept;
-  std::size_t rfind (const cow::basic_string<charT,traits,Alloc>& str, std::size_t pos = 0) const noexcept;
+  std::size_t rfind (const std::basic_string<charT,traits,Alloc>& str, std::size_t pos = npos) const noexcept;
+  std::size_t rfind (const cow::basic_string<charT,traits,Alloc>& str, std::size_t pos = npos) const noexcept;
 #else
-  std::size_t rfind (const std::basic_string<charT,traits,Alloc>& str, std::size_t pos = 0) const;
-  std::size_t rfind (const cow::basic_string<charT,traits,Alloc>& str, std::size_t pos = 0) const;
+  std::size_t rfind (const std::basic_string<charT,traits,Alloc>& str, std::size_t pos = npos) const;
+  std::size_t rfind (const cow::basic_string<charT,traits,Alloc>& str, std::size_t pos = npos) const;
 #endif
   // c-string (2)
   std::size_t rfind (const charT* s, std::size_t pos = 0) const;
@@ -1186,7 +1186,7 @@ basic_string<charT,traits,Alloc>::rfind(
   noexcept
 #endif
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().rfind( str, pos );
 }
 
 template < class charT, class traits, class Alloc >
@@ -1198,7 +1198,7 @@ basic_string<charT,traits,Alloc>::rfind(
   noexcept
 #endif
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().rfind( str._get_string_ref(), pos );
 }
 
 template < class charT, class traits, class Alloc >
@@ -1207,7 +1207,7 @@ basic_string<charT,traits,Alloc>::rfind(
   const charT* s,
   std::size_t pos) const
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().rfind( s, pos );
 }
 
 template < class charT, class traits, class Alloc >
@@ -1217,7 +1217,7 @@ basic_string<charT,traits,Alloc>::rfind(
   std::size_t pos,
   size_type n) const
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().rfind( s, pos, n );
 }
 
 template < class charT, class traits, class Alloc >
@@ -1229,7 +1229,7 @@ basic_string<charT,traits,Alloc>::rfind(
   noexcept
 #endif
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().rfind( c, pos );
 }
 
 template < class charT, class traits, class Alloc >
