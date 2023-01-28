@@ -20,7 +20,7 @@ add_several_examples(
   SOURCES
     string_append.cpp.in
     string_erase.cpp.in
-    # string_insert.cpp.in
+    string_insert.cpp.in
     string_swap.cpp.in
 )
 

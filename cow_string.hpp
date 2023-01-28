@@ -273,9 +273,11 @@ public:
   // Insert into string : cow::string::insert(..)
   //----------------------------------------------------------------------------
   // string (1)
+  cow::basic_string<charT,traits,Alloc>& insert (std::size_t pos, const std::basic_string<charT,traits,Alloc>& str);
   cow::basic_string<charT,traits,Alloc>& insert (std::size_t pos, const cow::basic_string<charT,traits,Alloc>& str);
   // substring (2)
 #if __cplusplus >= 201402L
+  cow::basic_string<charT,traits,Alloc>& insert (std::size_t pos, const std::basic_string<charT,traits,Alloc>& str, std::size_t subpos, std::size_t sublen = npos);
   cow::basic_string<charT,traits,Alloc>& insert (std::size_t pos, const cow::basic_string<charT,traits,Alloc>& str, std::size_t subpos, std::size_t sublen = npos);
 #endif
   // c-string (3)
@@ -1114,6 +1116,117 @@ basic_string<charT,traits,Alloc>::operator[] (std::size_t pos) const
 {
   return _get_string_ref()[pos];
 }
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::insert(
+  std::size_t pos,
+  const std::basic_string<charT,traits,Alloc>& str)
+{
+  _get_writeable().insert(pos, str);
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::insert(
+  std::size_t pos,
+  const cow::basic_string<charT,traits,Alloc>& str)
+{
+  _get_writeable().insert(pos, str._get_string_ref());
+  return *this;
+}
+
+#if __cplusplus >= 201402L
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::insert(
+  std::size_t pos,
+  const std::basic_string<charT,traits,Alloc>& str,
+  std::size_t subpos,
+  std::size_t sublen)
+{
+  _get_writeable().insert(pos, str, subpos, sublen);
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::insert(
+  std::size_t pos,
+  const cow::basic_string<charT,traits,Alloc>& str,
+  std::size_t subpos,
+  std::size_t sublen)
+{
+  _get_writeable().insert(pos, str._get_string_ref(), subpos, sublen);
+  return *this;
+}
+
+#endif
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::insert(std::size_t pos, const charT* s)
+{
+  _get_writeable().insert(pos, s);
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::insert(std::size_t pos, const charT* s, std::size_t n)
+{
+  _get_writeable().insert(pos, s, n);
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::insert(std::size_t pos, std::size_t n, charT c)
+{
+  _get_writeable().insert(pos, n, c);
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::iterator
+cow::basic_string<charT,traits,Alloc>::insert(
+  cow::basic_string<charT,traits,Alloc>::const_iterator p,
+  std::size_t n, charT c)
+{
+  return _get_writeable().insert(p, n, c);
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::iterator
+cow::basic_string<charT,traits,Alloc>::insert(
+  cow::basic_string<charT,traits,Alloc>::const_iterator p, charT c)
+{
+  return _get_writeable().insert(p, c);
+}
+
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
+template <class InputIterator>
+typename cow::basic_string<charT,traits,Alloc>::iterator
+cow::basic_string<charT,traits,Alloc>::insert(
+  cow::basic_string<charT,traits,Alloc>::iterator p,
+  InputIterator first, InputIterator last)
+{
+  return _get_writeable().insert(p, first, last);
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::insert(
+  cow::basic_string<charT,traits,Alloc>::const_iterator p,
+  std::initializer_list<charT> il)
+{
+  _get_writeable().insert(p, il);
+  return *this;
+}
+#endif
+
 
 #if __cplusplus >= 201402L
 template < class charT, class traits, class Alloc >
