@@ -1115,8 +1115,39 @@ basic_string<charT,traits,Alloc>::operator[] (std::size_t pos) const
   return _get_string_ref()[pos];
 }
 
+#if __cplusplus >= 201402L
 template < class charT, class traits, class Alloc >
 cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::erase(
+  std::size_t pos,
+  std::size_t len)
+{
+  _get_writeable().erase(pos, len);
+  return *this;
+}
+#endif
+
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::iterator
+cow::basic_string<charT,traits,Alloc>::erase(
+  cow::basic_string<charT,traits,Alloc>::const_iterator p)
+{
+  return _get_writeable().erase(p);
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::iterator
+cow::basic_string<charT,traits,Alloc>::erase(
+  cow::basic_string<charT,traits,Alloc>::const_iterator first,
+  cow::basic_string<charT,traits,Alloc>::const_iterator last)
+{
+  return _get_writeable().erase(first, last);
+}
+#endif
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>&
 basic_string<charT,traits,Alloc>::replace(
   std::size_t pos,
   std::size_t len,
