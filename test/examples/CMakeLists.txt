@@ -46,7 +46,7 @@ add_several_examples(
     # string_assign.cpp.in
     # string_at.cpp.in
     string_begin.cpp.in
-    # string_c_str.cpp.in
+    string_c_str.cpp.in
     # string_capacity.cpp.in
     # string_compare.cpp.in
     # string_copy.cpp.in

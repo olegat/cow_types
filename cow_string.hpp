@@ -1271,6 +1271,36 @@ basic_string<charT,traits,Alloc>::replace(
 }
 
 template < class charT, class traits, class Alloc >
+const charT*
+cow::basic_string<charT,traits,Alloc>::c_str() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_string_ref().c_str();
+}
+
+template < class charT, class traits, class Alloc >
+const charT*
+cow::basic_string<charT,traits,Alloc>::data() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
+Alloc
+cow::basic_string<charT,traits,Alloc>::get_allocator() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  COWSTRING_UNIMPLEMENTED();
+}
+
+template < class charT, class traits, class Alloc >
 std::size_t
 basic_string<charT,traits,Alloc>::find(
   const std::basic_string<charT,traits,Alloc>& str,
