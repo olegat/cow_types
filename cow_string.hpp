@@ -756,8 +756,9 @@ basic_string<charT,traits,Alloc>::basic_string(
   const cow::basic_string<charT,traits,Alloc>& str,
   std::size_t pos,
   std::size_t len)
+: m_ro_string(new std::basic_string<charT,traits,Alloc>(str._get_string_ref(), pos, len))
+, m_rw_string()
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
@@ -765,8 +766,9 @@ basic_string<charT,traits,Alloc>::basic_string(
   const std::basic_string<charT,traits,Alloc>& str,
   std::size_t pos,
   std::size_t len)
+: m_ro_string(new std::basic_string<charT,traits,Alloc>(str, pos, len))
+, m_rw_string()
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
@@ -800,31 +802,33 @@ template < class InputIterator >
 basic_string<charT,traits,Alloc>::basic_string(
   InputIterator first,
   InputIterator last)
+: m_ro_string(new std::basic_string<charT,traits,Alloc>(first, last))
+, m_rw_string()
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 #if __cplusplus >= 201103L
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   std::initializer_list<char> il)
+: m_ro_string(new std::basic_string<charT,traits,Alloc>(il))
+, m_rw_string()
 {
-  COWSTRING_UNIMPLEMENTED();
 }
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   cow::basic_string<charT,traits,Alloc>&& str)
 : m_ro_string(std::move(str.m_ro_string))
-, m_rw_string(str.m_rw_string.release())
+, m_rw_string(std::move(str.m_rw_string))
 {
 }
 
 template < class charT, class traits, class Alloc >
 basic_string<charT,traits,Alloc>::basic_string(
   std::basic_string<charT,traits,Alloc>&& str)
-: m_ro_string(nullptr)
-, m_rw_string(new std::basic_string<charT,traits,Alloc>(str))
+: m_ro_string(new std::basic_string<charT,traits,Alloc>(str))
+, m_rw_string()
 {
 }
 #endif
