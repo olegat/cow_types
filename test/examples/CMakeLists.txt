@@ -50,7 +50,7 @@ add_several_examples(
     # string_capacity.cpp.in
     # string_compare.cpp.in
     # string_copy.cpp.in
-    # string_data.cpp.in
+    string_data.cpp.in
     string_find.cpp.in
     # string_find_first_not_of.cpp.in
     # string_find_first_of.cpp.in

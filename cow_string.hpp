@@ -1287,7 +1287,7 @@ cow::basic_string<charT,traits,Alloc>::data() const
   noexcept
 #endif
 {
-  COWSTRING_UNIMPLEMENTED();
+  return _get_string_ref().data();
 }
 
 template < class charT, class traits, class Alloc >
