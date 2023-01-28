@@ -21,8 +21,14 @@ bool term::istty() {
   static struct Init {
     bool value;
     Init() {
-      struct termios attr;
-      this->value = (tcgetattr(STDOUT_FILENO, &attr) == 0);
+      const char* termname = getenv("TERM");
+      if (termname && strcmp(termname, "dumb")==0) {
+        this->value = false;
+      }
+      else {
+        struct termios attr;
+        this->value = (tcgetattr(STDOUT_FILENO, &attr) == 0);
+      }
     }
   } lazyIsTTY;
 
