@@ -47,7 +47,6 @@ add_several_examples(
     # string_at.cpp.in
     string_begin.cpp.in
     string_c_str.cpp.in
-    # string_capacity.cpp.in
     # string_compare.cpp.in
     # string_copy.cpp.in
     string_data.cpp.in
@@ -57,7 +56,6 @@ add_several_examples(
     # string_find_last_not_of.cpp.in
     # string_find_last_of.cpp.in
     string_length.cpp.in
-    # string_max_size.cpp.in
     # string_operator_equal.cpp.in
     string_operator_plusequal.cpp.in
     string_operator_squarebrackets.cpp.in

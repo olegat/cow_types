@@ -1031,6 +1031,36 @@ cow::basic_string<charT,traits,Alloc>::length() const
 }
 
 template < class charT, class traits, class Alloc >
+std::size_t
+cow::basic_string<charT,traits,Alloc>::max_size() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_string_ref().max_size();
+}
+
+template < class charT, class traits, class Alloc >
+std::size_t
+cow::basic_string<charT,traits,Alloc>::capacity() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_string_ref().capacity();
+}
+
+template < class charT, class traits, class Alloc >
+bool
+cow::basic_string<charT,traits,Alloc>::empty() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_string_ref().empty();
+}
+
+template < class charT, class traits, class Alloc >
 void
 cow::basic_string<charT,traits,Alloc>::resize(std::size_t n)
 {
