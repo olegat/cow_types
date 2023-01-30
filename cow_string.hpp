@@ -1373,6 +1373,76 @@ cow::basic_string<charT,traits,Alloc>::erase(
 #endif
 
 template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  std::size_t pos,
+  std::size_t len,
+  const std::basic_string<charT,traits,Alloc>& str)
+{
+  _get_writeable().replace( pos, len, str );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  std::size_t pos,
+  std::size_t len,
+  const cow::basic_string<charT,traits,Alloc>& str)
+{
+  _get_writeable().replace( pos, len, str._get_string_ref() );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  const_iterator i1,
+  const_iterator i2,
+  const std::basic_string<charT,traits,Alloc>& str)
+{
+  _get_writeable().replace( i1, i2, str );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  const_iterator i1,
+  const_iterator i2,
+  const cow::basic_string<charT,traits,Alloc>& str)
+{
+  _get_writeable().replace( i1, i2, str._get_string_ref() );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  std::size_t pos,
+  std::size_t len,
+  const std::basic_string<charT,traits,Alloc>& str,
+  std::size_t subpos,
+  std::size_t sublen)
+{
+  _get_writeable().replace( pos, len, str, subpos, sublen );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  std::size_t pos,
+  std::size_t len,
+  const cow::basic_string<charT,traits,Alloc>& str,
+  std::size_t subpos,
+  std::size_t sublen)
+{
+  _get_writeable().replace( pos, len, str._get_string_ref(), subpos, sublen );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
 typename cow::basic_string<charT,traits,Alloc>&
 cow::basic_string<charT,traits,Alloc>::replace(
   std::size_t pos,
@@ -1382,6 +1452,91 @@ cow::basic_string<charT,traits,Alloc>::replace(
   _get_writeable().replace( pos, len, s );
   return *this;
 }
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  const_iterator i1,
+  const_iterator i2,
+  const charT* s)
+{
+  _get_writeable().replace( i1, i2, s );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  std::size_t pos,
+  std::size_t len,
+  const charT* s,
+  std::size_t n)
+{
+  _get_writeable().replace( pos, len, s, n );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  const_iterator i1,
+  const_iterator i2,
+  const charT* s,
+  std::size_t n)
+{
+  _get_writeable().replace( i1, i2, s, n );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  std::size_t pos,
+  std::size_t len,
+  std::size_t n,
+  charT c)
+{
+  _get_writeable().replace( pos, len, n, c );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  const_iterator i1,
+  const_iterator i2,
+  std::size_t n,
+  charT c)
+{
+  _get_writeable().replace( i1, i2, n, c );
+  return *this;
+}
+
+template < class charT, class traits, class Alloc >
+template <class InputIterator>
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  const_iterator i1,
+  const_iterator i2,
+  InputIterator first,
+  InputIterator last)
+{
+  _get_writeable().replace( i1, i2, first, last );
+  return *this;
+}
+
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
+cow::basic_string<charT,traits,Alloc>&
+cow::basic_string<charT,traits,Alloc>::replace(
+  const_iterator i1,
+  const_iterator i2,
+  std::initializer_list<charT> il)
+{
+  _get_writeable().replace( i1, i2, il );
+  return *this;
+}
+#endif
 
 template < class charT, class traits, class Alloc >
 const charT*

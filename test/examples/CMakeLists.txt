@@ -63,7 +63,7 @@ add_several_examples(
     string_operator_squarebrackets.cpp.in
     # string_operators.cpp.in
     string_rbegin.cpp.in
-    # string_replace.cpp.in
+    string_replace.cpp.in
     # string_resize.cpp.in
     string_rfind.cpp.in
     string_size.cpp.in
