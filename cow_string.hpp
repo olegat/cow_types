@@ -25,7 +25,7 @@ public:
 
   typedef std::string::size_type                size_type;
   typedef std::string::iterator                 iterator;
-  typedef std::string::iterator                 const_iterator;
+  typedef std::string::const_iterator           const_iterator;
   typedef std::string::reverse_iterator         reverse_iterator;
   typedef std::string::const_reverse_iterator   const_reverse_iterator;
 
@@ -935,6 +935,36 @@ basic_string<charT,traits,Alloc>::end() const
 {
   return _get_string_ref().end();
 }
+
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::const_iterator
+cow::basic_string<charT,traits,Alloc>::cbegin() const noexcept
+{
+  return _get_string_ref().cbegin();
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::const_iterator
+cow::basic_string<charT,traits,Alloc>::cend() const noexcept
+{
+  return _get_string_ref().cend();
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::const_reverse_iterator
+cow::basic_string<charT,traits,Alloc>::crbegin() const noexcept
+{
+  return _get_string_ref().crbegin();
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::const_reverse_iterator
+cow::basic_string<charT,traits,Alloc>::crend() const noexcept
+{
+  return _get_string_ref().crend();
+}
+#endif
 
 template < class charT, class traits, class Alloc >
 std::size_t
