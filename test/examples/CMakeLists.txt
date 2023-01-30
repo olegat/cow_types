@@ -69,4 +69,5 @@ add_several_examples(
     string_swap-free.cpp.in
 )
 
+list( SORT EXAMPLE_TARGETS )
 set( EXAMPLE_TARGETS ${EXAMPLE_TARGETS} PARENT_SCOPE )
