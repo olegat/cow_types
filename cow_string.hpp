@@ -1087,6 +1087,15 @@ cow::basic_string<charT,traits,Alloc>::clear()
 
 #if __cplusplus >= 201103L
 template < class charT, class traits, class Alloc >
+void
+cow::basic_string<charT,traits,Alloc>::shrink_to_fit()
+{
+  _get_writeable().shrink_to_fit();
+}
+#endif
+
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
 charT&
 cow::basic_string<charT,traits,Alloc>::back()
 {

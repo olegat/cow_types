@@ -36,7 +36,6 @@ add_several_examples(
     string_front.cpp.in
     # string_operator_plus.cpp.in
     string_pop_back.cpp.in
-    # string_shrink_to_fit.cpp.in
 )
 
 add_several_examples(
