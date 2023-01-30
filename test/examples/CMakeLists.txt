@@ -30,10 +30,10 @@ add_several_examples(
     CXX_EXTENSIONS OFF
     FOLDER         "test/string"
   SOURCES
-    # string_back.cpp.in
+    string_back.cpp.in
     # string_cbegin.cpp.in
     # string_crbegin.cpp.in
-    # string_front.cpp.in
+    string_front.cpp.in
     # string_operator_plus.cpp.in
     # string_pop_back.cpp.in
     # string_shrink_to_fit.cpp.in

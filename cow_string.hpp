@@ -967,6 +967,36 @@ basic_string<charT,traits,Alloc>::clear()
   m_rw_string.reset(new std::basic_string<charT,traits,Alloc>());
 }
 
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
+charT&
+basic_string<charT,traits,Alloc>::back()
+{
+  return _get_writeable().back();
+}
+
+template < class charT, class traits, class Alloc >
+const charT&
+basic_string<charT,traits,Alloc>::back() const
+{
+  return _get_string_ref().back();
+}
+
+template < class charT, class traits, class Alloc >
+charT&
+basic_string<charT,traits,Alloc>::front()
+{
+  return _get_writeable().front();
+}
+
+template < class charT, class traits, class Alloc >
+const charT&
+basic_string<charT,traits,Alloc>::front() const
+{
+  return _get_string_ref().front();
+}
+#endif
+
 template < class charT, class traits, class Alloc >
 cow::basic_string<charT,traits,Alloc>&
 basic_string<charT,traits,Alloc>::operator+= (
