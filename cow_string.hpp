@@ -940,6 +940,46 @@ cow::basic_string<charT,traits,Alloc>::end() const
   return _get_string_ref().end();
 }
 
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::reverse_iterator
+cow::basic_string<charT,traits,Alloc>::rbegin()
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_writeable().rbegin();
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::const_reverse_iterator
+cow::basic_string<charT,traits,Alloc>::rbegin() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_string_ref().rbegin();
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::reverse_iterator
+cow::basic_string<charT,traits,Alloc>::rend()
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_writeable().rend();
+}
+
+template < class charT, class traits, class Alloc >
+typename cow::basic_string<charT,traits,Alloc>::const_reverse_iterator
+cow::basic_string<charT,traits,Alloc>::rend() const
+#if __cplusplus >= 201103L
+  noexcept
+#endif
+{
+  return _get_string_ref().rend();
+}
+
 #if __cplusplus >= 201103L
 template < class charT, class traits, class Alloc >
 typename cow::basic_string<charT,traits,Alloc>::const_iterator
