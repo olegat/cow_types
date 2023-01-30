@@ -1207,6 +1207,15 @@ cow::basic_string<charT,traits,Alloc>::swap(
   COWSTRING_UNIMPLEMENTED();
 }
 
+#if __cplusplus >= 201103L
+template < class charT, class traits, class Alloc >
+void
+cow::basic_string<charT,traits,Alloc>::pop_back()
+{
+  _get_writeable().pop_back();
+}
+#endif
+
 template < class charT, class traits, class Alloc >
 charT&
 cow::basic_string<charT,traits,Alloc>::operator[] (std::size_t pos)
