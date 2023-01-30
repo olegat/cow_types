@@ -1032,6 +1032,20 @@ cow::basic_string<charT,traits,Alloc>::length() const
 
 template < class charT, class traits, class Alloc >
 void
+cow::basic_string<charT,traits,Alloc>::resize(std::size_t n)
+{
+  _get_writeable().resize(n);
+}
+
+template < class charT, class traits, class Alloc >
+void
+cow::basic_string<charT,traits,Alloc>::resize(std::size_t n, char c)
+{
+  _get_writeable().resize(n, c);
+}
+
+template < class charT, class traits, class Alloc >
+void
 cow::basic_string<charT,traits,Alloc>::clear()
 #if __cplusplus >= 201103L
   noexcept
